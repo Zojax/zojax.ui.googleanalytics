@@ -1,0 +1,44 @@
+=======
+CHANGES
+=======
+
+1.1.0 (2009-09-07)
+------------------
+
+- Added caching
+
+- Copyright changed to 'Zope Foundation and Contributors'
+
+
+1.0.4 (2009-05-07)
+------------------
+
+- Code cleanup
+
+- Do not use zojax.theme.default
+
+- Do not use z3c.autoinclude
+
+
+1.0.3 (2009-03-17)
+------------------
+
+- Use zojax.theme.default
+
+
+1.0.2 (2008-12-02)
+------------------
+
+- Fixed wrong resource name
+
+
+1.0.1 (2008-12-01)
+------------------
+
+- Include ga.js
+
+
+1.0.0 (2008-11-20)
+------------------
+
+- Initial release
