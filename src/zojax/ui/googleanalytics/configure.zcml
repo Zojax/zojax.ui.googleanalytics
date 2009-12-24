@@ -1,0 +1,33 @@
+<configure
+   xmlns="http://namespaces.zope.org/zope"
+   xmlns:i18n="http://namespaces.zope.org/i18n"
+   xmlns:zojax="http://namespaces.zope.org/zojax"
+   i18n_domain="zojax.ui.googleanalytics">
+
+  <zojax:configlet
+     name="ui.googleanalytics"
+     title="Google Analytics"
+     schema=".interfaces.IGoogleAnalytics"
+     description="Google Analytics service for site."
+     permission="zojax.Configure">
+    <require
+       permission="zope.Public"
+       interface=".interfaces.IGoogleAnalytics" />
+  </zojax:configlet>
+
+  <subscriber handler=".configlet.configletChangeHandler" />
+
+  <zojax:pageelement
+     title="Google Analytics"
+     name="portal.ui.googleanalytics"
+     class=".configlet.GoogleAnalyticsPageElement"
+     manager=".interfaces.IGoogleAnalyticsHeaders" />
+
+  <!-- google analitics js -->
+  <zojax:resource
+     name="google-analytics.js" file="ga.js" />
+
+  <!-- translations -->
+  <i18n:registerTranslations directory="locales"/>
+
+</configure>

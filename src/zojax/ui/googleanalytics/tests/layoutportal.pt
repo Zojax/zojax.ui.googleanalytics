@@ -1,0 +1,8 @@
+<html>
+  <head>
+    <tal:block content="structure pageelement:page.headers" />
+  </head>
+  <body>
+    <div tal:content="structure view/render" />
+  </body>
+</html>

@@ -1,0 +1,61 @@
+================
+Google Analytics
+================
+
+    >>> from zope import component, interface
+    >>> from zope.testbrowser.testing import Browser
+
+Configure google analytics
+
+    >>> admin = Browser()
+    >>> admin.handleErrors = False
+    >>> admin.addHeader("Authorization", "Basic mgr:mgrpw")
+
+    >>> admin.open("http://localhost/settings/")
+    >>> admin.getLink('Google Analytics').click()
+    >>> admin.getControl(name="form.widgets.enabled:list").value = ['true']
+    >>> admin.getControl('Tracking code').value = 'u-2123123-1'
+    >>> admin.getControl(name='form.buttons.save').click()
+
+Browser site
+
+    >>> anon = Browser()
+    >>> anon.handleErrors = False
+    >>> anon.open("http://localhost/test.html")
+    >>> print anon.contents
+    <html>
+      <head>
+        <script type="text/javascript" src="http://localhost/@@/google-analytics.js" type="text/javascript"></script>
+        <script type="text/javascript">
+           var pageTracker = _gat._getTracker("u-2123123-1");
+           pageTracker._trackPageview();
+        </script>
+    </head>
+    ...
+    </html>
+
+Several counters
+
+    >>> admin.getControl('Tracking code').value = 'u-2123123-1\nu-111111-1'
+    >>> admin.getControl(name='form.buttons.save').click()
+
+    >>> anon.reload()
+    >>> print anon.contents
+    <html>
+      <head>
+        <script type="text/javascript" src="http://localhost/@@/google-analytics.js" type="text/javascript"></script>
+        <script type="text/javascript">
+            var pageTracker = _gat._getTracker("u-2123123-1");
+            pageTracker._trackPageview();
+        </script>
+        <script type="text/javascript">
+            var pageTracker = _gat._getTracker("u-111111-1");
+            pageTracker._trackPageview();
+        </script>
+      </head>
+    ...
+    </html>
+    
+Resource
+
+    >>> anon.open('http://localhost/@@/google-analytics.js')
