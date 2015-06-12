@@ -15,10 +15,8 @@
 
 $Id$
 """
-from zope import interface, component
+from zope import component  # , interface
 from zope.component import getUtility
-from zope.traversing.browser import absoluteURL
-from zope.app.component.hooks import getSite
 from zope.lifecycleevent.interfaces import IObjectModifiedEvent
 
 from zojax.cache.view import cache
@@ -36,12 +34,18 @@ class GoogleAnalyticsPageElement(object):
 
     def render(self):
         js = []
-        for code in self.configlet.code:
-            js.append(jstracker%code)
 
-        url = absoluteURL(getSite(), self.request)
+        tracker_create = ""
+        tracker_send = ""
+        for idx, code in enumerate(self.configlet.code):
+            if idx > 0:
+                tracker_create = ", {'name': 'newTracker%s'}" % idx
+                tracker_send = "newTracker%s." % idx
 
-        return jscode%url + '\n'.join(js)
+            js.insert(idx, jstracker_create % (code, tracker_create))
+            js.insert(idx + idx + 1, jstracker_send % (tracker_send))
+
+        return jscode % '\n'.join(js)
 
     def isAvailable(self):
         return self.configlet.enabled and self.configlet.code
@@ -51,14 +55,20 @@ class GoogleAnalyticsPageElement(object):
         return super(GoogleAnalyticsPageElement, self).updateAndRender()
 
 
-jscode = '<script type="text/javascript" src="%s/@@/google-analytics.js" type="text/javascript"></script>'
+jscode = """<script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-jstracker="""
-<script type="text/javascript">
-var pageTracker = _gat._getTracker("%s");
-pageTracker._trackPageview();
-</script>
-"""
+%s
+
+    </script>"""
+
+jstracker_create = "      ga('create', '%s', 'auto'%s);"
+
+jstracker_send = "      ga('%ssend', 'pageview');"
+
 
 @component.adapter(IGoogleAnalytics, IObjectModifiedEvent)
 def configletChangeHandler(configlet, ev):

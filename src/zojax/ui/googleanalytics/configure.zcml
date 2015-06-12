@@ -24,8 +24,8 @@
      manager=".interfaces.IGoogleAnalyticsHeaders" />
 
   <!-- google analitics js -->
-  <zojax:resource
-     name="google-analytics.js" file="ga.js" />
+  <!--zojax:resource
+     name="google-analytics.js" file="analytics.js" /-->
 
   <!-- translations -->
   <i18n:registerTranslations directory="locales"/>

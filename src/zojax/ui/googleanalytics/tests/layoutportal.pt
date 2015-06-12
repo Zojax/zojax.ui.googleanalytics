@@ -1,5 +1,6 @@
 <html>
   <head>
+    <title>Test</title>
     <tal:block content="structure pageelement:page.headers" />
   </head>
   <body>
